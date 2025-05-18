@@ -45,9 +45,8 @@ LightRoom=type=http-response,pattern=^https:\/\/photos\.adobe\.io\/v2\/accounts*
 ————————————————————————————
 
 # Locket Gold
-revenuecat = type=http-response, pattern=^https:\/\/api\.revenuecat\.com\/.+\/(receipts$|subscribers\/[^/]+$), script-path=https://raw.githubusercontent.com/aleotoidayy/nghluan/aleoo/locketgold.js, requires-body=true, max-size=-1, timeout=60
-
-deleteHeader = type=http-request, pattern=^https:\/\/api\.revenuecat\.com\/.+\/(receipts|subscribers), script-path=https://raw.githubusercontent.com/aleotoidayy/nghluan/aleoo/deleteheader.js, timeout=60
+revenuecat = type=http-response, pattern=^https:\/\/api\.revenuecat\.com\/.+\/(receipts$|subscribers\/[^/]+$), requires-body=true, max-size=-1, timeout=60, script-path=https://raw.githubusercontent.com/aleotoidayy/klinhh/klinhh/revenuecat.js
+deleteHeader = type=http-request, pattern=^https:\/\/api\.revenuecat\.com\/.+\/(receipts|subscribers), script-path=https://raw.githubusercontent.com/aleotoidayy/klinhh/klinhh/deleteheader.js, timeout=60
 
 ————————————————————————————
 
