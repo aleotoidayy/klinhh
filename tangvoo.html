@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>danh tang cho vooo 💗</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: black;
+      overflow: hidden;
+      height: 100vh;
+    }
+
+    .falling {
+      position: absolute;
+      top: -50px;
+      white-space: nowrap;
+      font-size: 20px;
+      font-weight: bold;
+      color: white;
+      opacity: 0.9;
+      animation: fall linear infinite;
+      pointer-events: none;
+      text-shadow: 0 0 5px hotpink;
+    }
+
+    .heart {
+      color: hotpink;
+    }
+
+    @keyframes fall {
+      0% {
+        transform: translateY(-50px);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(110vh);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<script>
+  const texts = [
+    "You are my sunshine.",
+    "mai yeu voo",
+    "love u so muchh 💗",
+    "Nguyễn Khánh Linh",
+    "💖",
+    "💕",
+    "💓",
+    "💗"
+  ];
+
+  function createFallingText() {
+    const text = document.createElement("div");
+    text.classList.add("falling");
+
+    
+    const content = texts[Math.floor(Math.random() * texts.length)];
+    text.innerHTML = `<span class="${/♥|💖|💗|💓/.test(content) ? 'heart' : ''}">${content}</span>`;
+
+    text.style.left = Math.random() * window.innerWidth + "px";
+    text.style.animationDuration = (3 + Math.random() * 5) + "s";
+    text.style.fontSize = (16 + Math.random() * 24) + "px";
+    text.style.opacity = Math.random() * 0.8 + 0.3;
+
+    document.body.appendChild(text);
+
+    setTimeout(() => {
+      text.remove();
+    }, 10000);
+  }
+
+  setInterval(createFallingText, 250);
+</script>
+
+</body>
+</html>
