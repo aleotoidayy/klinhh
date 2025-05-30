@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <title>tang voo 💗</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: black;
+      perspective: 1000px;
+    }
+
+    .firefly {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: white;
+      border-radius: 50%;
+      opacity: 0.6;
+      animation: blink 2s infinite ease-in-out alternate;
+    }
+
+    @keyframes blink {
+      0% { opacity: 0.2; transform: scale(1); }
+      100% { opacity: 1; transform: scale(1.5); }
+    }
+
+    .scene {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+      transform-style: preserve-3d;
+      transition: transform 0.1s ease-out;
+      will-change: transform;
+      z-index: 10;
+    }
+
+    .text {
+      position: absolute;
+      top: 0;
+      font-family: 'Dancing Script', cursive;
+      font-size: 42px;
+      white-space: nowrap;
+      pointer-events: none;
+      animation:
+        gentleFall 14s cubic-bezier(0.42, 0, 0.58, 1) infinite,
+        rgbShift 14s ease-in-out infinite;
+      opacity: 0;
+      color: #fff;
+      text-shadow:
+        0 0 8px #fff,
+        0 0 20px #f0f,
+        0 0 30px #f00,
+        0 0 40px #0ff,
+        0 0 50px #f0f,
+        0 0 60px #f00,
+        0 0 70px #0ff;
+      user-select: none;
+      font-weight: 400;
+      transform-origin: center;
+    }
+
+    @keyframes gentleFall {
+      0% {
+        transform: translateY(-10vh) scale(0.9);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      50% {
+        transform: translateY(50vh) scale(1.2);
+        opacity: 1;
+      }
+      90% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(110vh) scale(0.9);
+        opacity: 0;
+      }
+    }
+
+    @keyframes rgbShift {
+      0%, 100% {
+        color: #ffffff;
+        text-shadow:
+          0 0 8px #ffffff,
+          0 0 20px #ff83a8,
+          0 0 30px #d12c4b,
+          0 0 40px #7feaff;
+      }
+      25% {
+        color: #ff83a8;
+        text-shadow:
+          0 0 8px #ff83a8,
+          0 0 20px #ff5e7f,
+          0 0 30px #d12c4b,
+          0 0 40px #7feaff;
+      }
+      50% {
+        color: #d12c4b;
+        text-shadow:
+          0 0 8px #d12c4b,
+          0 0 20px #ff2a82,
+          0 0 30px #8b1031,
+          0 0 40px #7feaff;
+      }
+      75% {
+        color: #7feaff;
+        text-shadow:
+          0 0 8px #7feaff,
+          0 0 20px #4ec9ff,
+          0 0 30px #2185a1,
+          0 0 40px #7feaff;
+      }
+    }
+
+    .heart {
+      font-size: 48px;
+    }
+
+    .petal {
+      position: absolute;
+      width: 12px;
+      height: 18px;
+      background: radial-gradient(ellipse at center, #ff5e7f 60%, #d12c4b 100%);
+      border-radius: 60% 40% 60% 40% / 70% 90% 10% 30%;
+      opacity: 0.85;
+      pointer-events: none;
+      animation: petalFall linear infinite;
+      filter: drop-shadow(0 0 2px #d12c4b);
+      transform-origin: center;
+    }
+
+    @keyframes petalFall {
+      0% {
+        transform: translateY(-10vh) rotate(0deg) translateX(0);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(110vh) rotate(360deg) translateX(30px);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="scene" id="scene"></div>
+
+  <script>
+    const texts = [
+      "anh yeu em", "yeu em nhieu lam", "", "you are my sunshine.",
+      "💖", "💗", "💕", "love u so much 💗", "yeu em",
+     
+    ];
+
+    const scene = document.getElementById('scene');
+
+    // Zoom & Rotation
+    let scale = 1;
+    let rotateX = 0;
+    let rotateY = 0;
+
+    function updateTransform() {
+      scene.style.transform = `scale(${scale}) rotateY(${rotateY}deg) rotateX(${rotateX}deg)`;
+    }
+
+    document.addEventListener('wheel', function (e) {
+      e.preventDefault();
+      scale += e.deltaY * -0.001;
+      scale = Math.min(Math.max(0.5, scale), 2);
+      updateTransform();
+    }, { passive: false });
+
+    let initialDistance = null;
+
+    function getDistance(touches) {
+      const dx = touches[0].clientX - touches[1].clientX;
+      const dy = touches[0].clientY - touches[1].clientY;
+      return Math.sqrt(dx * dx + dy * dy);
+    }
+
+    scene.addEventListener('touchstart', e => {
+      if (e.touches.length === 2) {
+        initialDistance = getDistance(e.touches);
+      }
+    }, { passive: false });
+
+    scene.addEventListener('touchmove', e => {
+      if (e.touches.length === 2 && initialDistance !== null) {
+        e.preventDefault();
+        const currentDistance = getDistance(e.touches);
+        const delta = currentDistance - initialDistance;
+        scale += delta * 0.002;
+        scale = Math.min(Math.max(0.5, scale), 2);
+        updateTransform();
+        initialDistance = currentDistance;
+      }
+    }, { passive: false });
+
+    scene.addEventListener('touchend', e => {
+      if (e.touches.length < 2) {
+        initialDistance = null;
+      }
+    });
+
+    document.addEventListener('mousemove', e => {
+      const x = (e.clientX / window.innerWidth - 0.5) * 2;
+      const y = (e.clientY / window.innerHeight - 0.5) * 2;
+      rotateY = x * 20;
+      rotateX = -y * 15;
+      updateTransform();
+    });
+
+    if (window.DeviceOrientationEvent) {
+      window.addEventListener('deviceorientation', e => {
+        rotateY = e.gamma * 1.5 || 0;
+        rotateX = e.beta * 1.2 || 0;
+        updateTransform();
+      });
+    }
+
+    function createText() {
+      const el = document.createElement("div");
+      const content = texts[Math.floor(Math.random() * texts.length)];
+      el.className = "text";
+      if (content === "❤️") el.classList.add("heart");
+      el.textContent = content;
+
+      const left = Math.random() * 100;
+      const duration = 14;
+      const delay = Math.random() * 6;
+
+      el.style.left = left + "vw";
+      el.style.top = "0";
+      el.style.animationDuration = `${duration}s, ${duration}s`;
+      el.style.animationDelay = `${delay}s, ${delay}s`;
+      scene.appendChild(el);
+
+      setTimeout(() => {
+        scene.removeChild(el);
+      }, (duration + delay) * 1000);
+    }
+
+    setInterval(createText, 300);
+    for (let i = 0; i < 40; i++) createText();
+
+    for (let i = 0; i < 80; i++) {
+      const firefly = document.createElement('div');
+      firefly.className = 'firefly';
+      firefly.style.left = Math.random() * 100 + 'vw';
+      firefly.style.top = Math.random() * 100 + 'vh';
+      firefly.style.animationDuration = (1 + Math.random() * 2) + 's';
+      document.body.appendChild(firefly);
+    }
+
+    function createPetal() {
+      const petal = document.createElement('div');
+      petal.className = 'petal';
+
+      const left = Math.random() * 100;
+      const duration = 10 + Math.random() * 5;
+      const delay = Math.random() * 5;
+
+      petal.style.left = left + "vw";
+      petal.style.top = "-5vh";
+      petal.style.animationDuration = `${duration}s`;
+      petal.style.animationDelay = `${delay}s`;
+      petal.style.transform = `rotate(${Math.random() * 360}deg)`;
+
+      scene.appendChild(petal);
+
+      setTimeout(() => {
+        scene.removeChild(petal);
+      }, (duration + delay) * 1000);
+    }
+
+    setInterval(createPetal, 300);
+    for (let i = 0; i < 20; i++) createPetal();
+  </script>
+</body>
+</html>
