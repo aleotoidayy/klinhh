@@ -1,0 +1,56 @@
+mixed-port: 7890
+allow-lan: true
+bind-address: '*'
+mode: rule
+log-level: info
+external-controller: '127.0.0.1:9090'
+
+dns:
+  enable: true
+  ipv6: false
+  use-hosts: true
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.1/16
+  nameserver: [8.8.8.8, 1.1.1.1]
+  fallback:
+    - https://doh.dns.sb/dns-query
+    - https://dns.cloudflare.com/dns-query
+    - https://dns.twnic.tw/dns-query
+    - tls://8.8.4.4:853
+  fallback-filter:
+    geoip: true
+    ipcidr:
+      - 240.0.0.0/4
+      - 0.0.0.0/32
+
+proxies: []
+
+proxy-providers:
+  VPN:
+    type: http
+    url: https://4gshine.com/api/v1/client/subscribe?token=9a7cf8966361d3a61d88102393ad1a74
+    path: ./proxy_providers/vpn.yaml
+    interval: 3600
+    health-check:
+      enable: true
+      interval: 600
+      url: http://www.gstatic.com/generate_204
+
+proxy-groups:
+  - name: 𝐀𝐮𝐭𝐨 𝐒𝐞𝐥𝐞𝐜𝐭
+    type: select
+    proxies:
+      - 𝐅𝐮𝐥𝐥 𝐒𝐞𝐯𝐞𝐫
+      - DIRECT
+    icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Rocket.png"
+    lazy: true
+
+  - name: 𝐅𝐮𝐥𝐥 𝐒𝐞𝐯𝐞𝐫
+    type: select
+    use: [VPN]
+    icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Auto.png"
+    interval: 10
+    lazy: true
+
+rules:
+  - MATCH,𝐀𝐮𝐭𝐨 𝐒𝐞𝐥𝐞𝐜𝐭
